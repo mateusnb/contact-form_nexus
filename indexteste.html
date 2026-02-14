@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inversa Data Portal</title>
+<style>
+body {
+background: #050a14;
+color: white;
+font-family: sans-serif;
+display: flex;
+justify-content: center;
+align-items: center;
+height: 100vh;
+margin: 0;
+}
+.container {
+background: #0f172a;
+padding: 30px;
+border-radius: 12px;
+text-align: center;
+border: 1px solid #00d4ff;
+width: 100%;
+max-width: 350px;
+box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+}
+h1 { color: #00d4ff; letter-spacing: 2px; font-weight: 300; }
+input {
+width: 100%;
+padding: 12px;
+margin: 20px 0;
+border-radius: 6px;
+border: 1px solid #334155;
+background: #1e293b;
+color: white;
+box-sizing: border-box;
+outline: none;
+}
+input:focus { border-color: #00d4ff; }
+button {
+width: 100%;
+padding: 12px;
+background: #00d4ff;
+color: #050a14;
+border: none;
+border-radius: 6px;
+font-weight: bold;
+cursor: pointer;
+transition: 0.3s;
+}
+button:hover { background: #008fb3; transform: scale(1.02); }
+#status { margin-top: 20px; font-size: 12px; color: #94a3b8; text-transform: uppercase; }
+</style>
+</head>
+<body>
+<div class="container">
+<h1>INVERSA</h1>
+<input type="text" id="campoMensagem" placeholder="Insira o dado estratégico...">
+<button onclick="enviarDados()">TRANSMITIR DADO</button>
+<div id="status">SISTEMA PRONTO</div>
+</div>
+
+<script>
+    async function enviarDados() {
+        // SUBSTITUA A URL ABAIXO PELA SUA URL DO GOOGLE (WEB APP URL)
+        const SCRIPT_URL = "COLE_AQUI_SUA_URL_DO_APPS_SCRIPT";
+        
+        const input = document.getElementById('campoMensagem');
+        const status = document.getElementById('status');
+
+        if (!input.value) {
+            status.innerText = "ERRO: CAMPO VAZIO";
+            return;
+        }
+
+        status.innerText = "SINCRONIZANDO...";
+
+        try {
+            // 'no-cors' permite o envio seguro entre domínios diferentes
+            await fetch(SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "text/plain" },
+                body: JSON.stringify({ mensagem: input.value })
+            });
+
+            status.innerText = "CONCLUÍDO: DADO SALVO NA PLANILHA";
+            status.style.color = "#4ade80";
+            input.value = "";
+        } catch (e) {
+            status.innerText = "ERRO NA TRANSMISSÃO";
+            status.style.color = "#f87171";
+            console.error(e);
+        }
+    }
+</script>
+</body>
+</html>
